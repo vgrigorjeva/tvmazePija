@@ -1,0 +1,28 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{episode.name}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="closeDetails()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <img [src]="episode.image?.medium">
+  <ion-row>
+    <ion-col>
+      <p>Season: {{episode.season}}</p>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <p>Episode number: {{episode.number}}</p>
+    </ion-col>
+  </ion-row>
+  {{episode.summary}}
+
+</ion-content>
