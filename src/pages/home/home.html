@@ -1,14 +1,49 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
+    <ion-title>Home</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+
+  <ion-row>
+    <ion-col>
+      <h4>Find episodes by show name</h4>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <form (ngSubmit)="searchShows(searchForm)" [formGroup]="searchForm">
+      <ion-list>
+        <ion-item>
+          <ion-input type="text" formControlName="query" placeholder="Enter show name"></ion-input>
+        </ion-item>
+      </ion-list>
+      <button ion-button color="default" type="submit" [disabled]="!searchForm.valid">Search</button>
+    </form>
+  </ion-row>
+
+  <ion-row>
+    <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <br><br>
+    <div class="alert alert-danger" [hidden]="!errorMessage && (!shows || shows.length > 0)">
+      No TV shows found with this name
+    </div>
+  </ion-row>
+
+  <ion-row>
+    <h5 *ngIf="show"> Show name: {{show.name}}</h5>
+  </ion-row>
+
+  <ion-list *ngIf="show">
+    <ion-item *ngFor="let episode of episodes" (click)="showEpisodeDetails(show.id, episode)">
+      <ion-avatar item-start>
+        <img *ngIf="episode.image" [src]="episode.image?.medium">
+        <img *ngIf="!episode.image" src="../../assets/images/Placeholder.png">
+      </ion-avatar>
+      <h2>{{episode.name}}</h2>
+      <p>Season: {{episode.season}} Episode number: {{episode.number}}</p>
+    </ion-item>
+  </ion-list>
+
 </ion-content>
