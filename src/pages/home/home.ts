@@ -16,11 +16,34 @@ export class HomePage {
   show: Show;
   errorMessage: string;
   episodes: Episode[];
+  foundInSummary: any = [];
 
   constructor(public fb: FormBuilder, public navParams: NavParams, public searchProvider: SearchProvider, public modalCtrl: ModalController) {
     this.searchForm = this.fb.group({
       query: ['', [Validators.required]]
     });
+  }
+
+  findText(searchText) {
+    let searchString = searchText.toLowerCase();
+    let stringArray = searchString.split(" ");
+    this.foundInSummary = [];
+    for (let epis in this.episodes) {
+      let episode = this.episodes[epis];
+      // console.log(this.episodes[epis].summary);
+      if (episode.summary !== null) {
+        let containsAllWords = true;
+        let toLowerCase = episode.summary.toLowerCase();
+        for (let i = 0; i < stringArray.length; i++) {
+          if (!toLowerCase.includes(stringArray[i])) {
+            containsAllWords = false;
+          }
+        }
+        if (containsAllWords) {
+          this.foundInSummary.push(episode);
+        }
+      }
+    }
   }
 
   searchShows({ value }: { value: any }) {
@@ -29,6 +52,7 @@ export class HomePage {
       this.show = show;
       this.searchProvider.searchEpisodes(this.show.id).subscribe(episodes => {
         this.episodes = episodes;
+        this.foundInSummary = episodes;
       },
         error => this.errorMessage = <any>error
       )
@@ -37,8 +61,8 @@ export class HomePage {
     );
   }
 
-  showEpisodeDetails(showId, episode){
-    let detailsModal = this.modalCtrl.create('DetailsModalPage', {showId: showId, episode: episode});
+  showEpisodeDetails(showId, episode) {
+    let detailsModal = this.modalCtrl.create('DetailsModalPage', { showId: showId, episode: episode });
     detailsModal.present();
   }
 

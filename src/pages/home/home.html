@@ -16,13 +16,13 @@
     <form (ngSubmit)="searchShows(searchForm)" [formGroup]="searchForm">
       <ion-list>
         <ion-item>
-          <ion-input type="text" formControlName="query" placeholder="Enter show name"></ion-input>
+          <ion-input *ngIf="episodes" type="text" formControlName="query" placeholder="Enter show name" (input)="findText($event.target.value)"></ion-input>
+          <ion-input *ngIf="!episodes" type="text" formControlName="query" placeholder="Enter show name"></ion-input>
         </ion-item>
       </ion-list>
       <button ion-button color="default" type="submit" [disabled]="!searchForm.valid">Search</button>
     </form>
   </ion-row>
-
   <ion-row>
     <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
     <br><br>
@@ -30,13 +30,11 @@
       No TV shows found with this name
     </div>
   </ion-row>
-
   <ion-row>
     <h5 *ngIf="show"> Show name: {{show.name}}</h5>
   </ion-row>
-
   <ion-list *ngIf="show">
-    <ion-item *ngFor="let episode of episodes" (click)="showEpisodeDetails(show.id, episode)">
+    <ion-item *ngFor="let episode of foundInSummary" (click)="showEpisodeDetails(show.id, episode)">
       <ion-avatar item-start>
         <img *ngIf="episode.image" [src]="episode.image?.medium">
         <img *ngIf="!episode.image" src="../../assets/images/Placeholder.png">
